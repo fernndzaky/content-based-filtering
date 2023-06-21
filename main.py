@@ -42,11 +42,8 @@ def recommend_recipes():
     # Calculate the cosine similarity between input vector and ingredient vectors
     similarities = cosine_similarity(input_vector, ingredient_vectors).flatten()
 
-    # Take only scores above 0
-    sorted_similarities = similarities[(similarities > 0)]
-
     # Sort the recipes based on similarity scores
-    sorted_indices = sorted_similarities.argsort()[::-1]
+    sorted_indices = similarities.argsort()[::-1]
 
     # Prepare the recommended recipes as a list of dictionaries
     recommended_recipes = []
