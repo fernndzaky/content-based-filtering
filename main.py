@@ -14,7 +14,7 @@ def safe_literal_eval(s):
 
 @app.route('/recommend-recipes', methods=['POST'])
 def recommend_recipes():
-    csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mapping.csv'  # Replace with the path to your CSV file
+    csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mappings.csv'  # Replace with the path to your CSV file
 
     # Retrieve the input ingredients from the request
     input_ingredients = request.json['ingredients']
@@ -50,7 +50,7 @@ def recommend_recipes():
 
     # Prepare the recommended recipes as a list of dictionaries
     recommended_recipes = []
-    for index in sorted_indices[:1]:
+    for index in sorted_indices[:4]:
         recommended_recipes.append({
             'title': titles[index],
             'ingredients': ingredients[index]
