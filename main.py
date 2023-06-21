@@ -6,9 +6,15 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+def safe_literal_eval(s):
+    try:
+        return literal_eval(s)
+    except SyntaxError:
+        return []  # or some other default value
+
 @app.route('/recommend-recipes', methods=['POST'])
 def recommend_recipes():
-    csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mapping.csv'  # Replace with the path to your CSV file
+    csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mappings.csv'  # Replace with the path to your CSV file
 
     # Retrieve the input ingredients from the request
     input_ingredients = request.json['ingredients']
@@ -24,7 +30,7 @@ def recommend_recipes():
             ingredients.append(row['Ingredients'])
 
     # Convert ingredients from string to list
-    ingredients = [literal_eval(ingredient) for ingredient in ingredients]
+    ingredients = [safe_literal_eval(ingredient) for ingredient in ingredients]
 
     # Vectorize the ingredients using TF-IDF
     vectorizer = TfidfVectorizer()
