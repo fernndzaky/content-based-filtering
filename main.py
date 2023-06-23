@@ -22,12 +22,14 @@ def recommend_recipes():
     # Read the first 5 rows from the CSV file and extract the title and ingredients
     titles = []
     ingredients = []
+    instructions = []
 
     with open(csv_file_path, 'r', encoding='utf-8-sig') as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
             titles.append(row['Title'])
             ingredients.append(row['Ingredients'])
+            instructions.append(row['Instructions'])
 
     # Convert ingredients from string to list
     ingredients = [safe_literal_eval(ingredient) for ingredient in ingredients]
@@ -50,7 +52,8 @@ def recommend_recipes():
     for index in sorted_indices[:4]:
         recommended_recipes.append({
             'title': titles[index],
-            'ingredients': ingredients[index]
+            'ingredients': ingredients[index],
+            'instructions': instructions[index]
         })
 
     # Return the recommended recipes as a JSON response
