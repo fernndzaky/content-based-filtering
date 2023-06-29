@@ -16,11 +16,12 @@ def safe_literal_eval(s):
 def recommend_recipes():
     csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mapping.csv'  # Replace with the path to your CSV file
 
-    # Retrieve the input ingredients from the request
-    input_ingredients = request.json['ingredients']
+    # Retrieve the input cleaned_ingredients from the request
+    input_ingredients = request.json['cleaned_ingredients']
 
-    # Read the first 5 rows from the CSV file and extract the title and ingredients
+    # Read the first 5 rows from the CSV file and extract the title and cleaned_ingredients
     titles = []
+    cleaned_ingredients = []
     ingredients = []
     instructions = []
 
@@ -28,17 +29,18 @@ def recommend_recipes():
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
             titles.append(row['Title'])
-            ingredients.append(row['Ingredients'])
+            cleaned_ingredients.append(row['Cleaned_Ingredients'])
             instructions.append(row['Instructions'])
+            ingredients.append(row['Ingredients'])
 
-    # Convert ingredients from string to list
-    ingredients = [safe_literal_eval(ingredient) for ingredient in ingredients]
+    # Convert cleaned_ingredients from string to list
+    cleaned_ingredients = [safe_literal_eval(ingredient) for ingredient in cleaned_ingredients]
 
-    # Vectorize the ingredients using TF-IDF
+    # Vectorize the cleaned_ingredients using TF-IDF
     vectorizer = TfidfVectorizer()
-    ingredient_vectors = vectorizer.fit_transform([' '.join(ingredient) for ingredient in ingredients])
+    ingredient_vectors = vectorizer.fit_transform([' '.join(ingredient) for ingredient in cleaned_ingredients])
 
-    # Vectorize the input ingredients
+    # Vectorize the input cleaned_ingredients
     input_vector = vectorizer.transform([' '.join(input_ingredients)])
 
     # Calculate the cosine similarity between input vector and ingredient vectors
