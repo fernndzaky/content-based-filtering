@@ -14,10 +14,10 @@ def safe_literal_eval(s):
 
 @app.route('/recommend-recipes', methods=['POST'])
 def recommend_recipes():
-    csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mapping.csv'  # Replace with the path to your CSV file
+    csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mappings.csv'  # Replace with the path to your CSV file
 
     # Retrieve the input cleaned_ingredients from the request
-    input_ingredients = request.json['cleaned_ingredients']
+    input_ingredients = request.json['ingredients']
 
     # Read the first 5 rows from the CSV file and extract the title and cleaned_ingredients
     titles = []
