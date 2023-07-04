@@ -27,6 +27,7 @@ def recommend_recipes():
     courses = []
     cuisines = []
 
+    #Populate empty list with data
     with open(csv_file_path, 'r', encoding='utf-8-sig') as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
