@@ -1,4 +1,5 @@
 import csv
+import pickle
 from ast import literal_eval
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -18,6 +19,8 @@ def recommend_recipes():
 
     # Retrieve the input cleaned_ingredients from the request
     input_ingredients = request.json['ingredients']
+    input_course = request.json['course']
+    input_cuisine = request.json['cuisine']
 
     # Read the first 5 rows from the CSV file and extract the title and cleaned_ingredients
     titles = []
@@ -27,14 +30,14 @@ def recommend_recipes():
     courses = []
     cuisines = []
 
-    #Populate empty list with data
     with open(csv_file_path, 'r', encoding='utf-8-sig') as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
             titles.append(row['name'])
             cleaned_ingredients.append(row['cleaned_ingredients'])
+            ingredients.append(row['ingredients'])
             instructions.append(row['url'])
-            cuisines.append(row['course'])
+            courses.append(row['course'])
             cuisines.append(row['cuisine'])
 
     # Convert cleaned_ingredients from string to list
@@ -56,13 +59,16 @@ def recommend_recipes():
     # Prepare the recommended recipes as a list of dictionaries
     recommended_recipes = []
     for index in sorted_indices[:4]:
-        recommended_recipes.append({
-            'title': titles[index],
-            'ingredients': ingredients[index],
-            'instructions': instructions[index],
-            'courses': courses[index],
-            'cuisines': cuisines[index]
-        })
+        if (input_course.lower() == 'anything' or courses[index].lower() == input_course.lower()) and \
+                (input_cuisine.lower() == 'anything' or cuisines[index].lower() == input_cuisine.lower()):
+            recommended_recipes.append({
+                'title': titles[index],
+                'ingredients': ingredients[index],
+                'instructions': instructions[index],
+                'courses': courses[index],
+                'cuisines': cuisines[index],
+                'input_ingredients': input_ingredients,
+            })
 
     # Return the recommended recipes as a JSON response
     return jsonify(recommended_recipes)
