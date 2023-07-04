@@ -14,7 +14,7 @@ def safe_literal_eval(s):
 
 @app.route('/recommend-recipes', methods=['POST'])
 def recommend_recipes():
-    csv_file_path = 'Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mapping.csv'  # Replace with the path to your CSV file
+    csv_file_path = 'cleaned_dataset.csv'  # Replace with the path to your CSV file
 
     # Retrieve the input cleaned_ingredients from the request
     input_ingredients = request.json['ingredients']
@@ -24,14 +24,17 @@ def recommend_recipes():
     cleaned_ingredients = []
     ingredients = []
     instructions = []
+    courses = []
+    cuisines = []
 
     with open(csv_file_path, 'r', encoding='utf-8-sig') as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
-            titles.append(row['Title'])
-            cleaned_ingredients.append(row['Cleaned_Ingredients'])
-            instructions.append(row['Instructions'])
-            ingredients.append(row['Ingredients'])
+            titles.append(row['name'])
+            cleaned_ingredients.append(row['cleaned_ingredients'])
+            instructions.append(row['url'])
+            cuisines.append(row['course'])
+            cuisines.append(row['cuisine'])
 
     # Convert cleaned_ingredients from string to list
     cleaned_ingredients = [safe_literal_eval(ingredient) for ingredient in cleaned_ingredients]
@@ -55,7 +58,9 @@ def recommend_recipes():
         recommended_recipes.append({
             'title': titles[index],
             'ingredients': ingredients[index],
-            'instructions': instructions[index]
+            'instructions': instructions[index],
+            'courses': courses[index],
+            'cuisines': cuisines[index]
         })
 
     # Return the recommended recipes as a JSON response
